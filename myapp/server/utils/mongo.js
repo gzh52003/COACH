@@ -52,6 +52,9 @@ async function find(colName,query={},options={}){
         opt.projection = options.field;
     }
     let result = collection.find(query,opt);
+
+    const amount = await result.count();
+
     if(options.skip){
         result.skip(options.skip)
     }
@@ -72,7 +75,10 @@ async function find(colName,query={},options={}){
     }
     result = await result.toArray();
     client.close();
-    return result
+    return {
+        amount,
+        data:result
+    }
 }
 
 module.exports = {

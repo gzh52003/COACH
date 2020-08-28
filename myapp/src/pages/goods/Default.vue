@@ -1,6 +1,5 @@
 <template>
  <div>
-     Goods_Deault
      <router-view />
  </div>
 </template>

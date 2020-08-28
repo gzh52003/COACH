@@ -90,7 +90,7 @@ export default {
    async created(){
          const result = await this.$request.get('/user');
          console.log(result.data.data);
-         this.userlist=result.data.data;
+         this.userlist=result.data.data.data;
     }
 }
 </script>

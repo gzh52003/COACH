@@ -65,10 +65,11 @@ async function find(colName,query={},options={}){
         let key,val;
         key = options.sort[0];
         if(options.sort.length>1){
-            val = options.sort[0];
+            val = options.sort[1]*1;
         }else{
             val = -1;
         }
+        console.log(key,val);
         result  = result.sort({
             [key]:val
         })

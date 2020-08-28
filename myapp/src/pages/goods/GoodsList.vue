@@ -3,6 +3,7 @@
     <!-- 表格组件 -->
     <el-table
     :data="goodsData"
+    @sort-change='sortChange'
     height='600px'
     border
     style="width: 100%">
@@ -15,12 +16,12 @@
         <el-table-column
         prop="gid"
         label="商品序号"
-        width="120">
+        nim-width="120">
         </el-table-column>
         <el-table-column
         prop="goodName"
         label="商品名称"
-        width="120">
+        nim-width="120">
         </el-table-column>
         <el-table-column
         prop="goodPic"
@@ -32,16 +33,19 @@
       </template>
         </el-table-column>
         <el-table-column
+        sortable='custom'
         prop="salePrice"
         label="销售价"
         width="120">
         </el-table-column>
         <el-table-column
+        sortable='custom'
         prop="oldPrice"
         label="原价"
         width="120">
         </el-table-column>
         <el-table-column
+        sortable='custom'
         prop="storageNum"
         label="库存"
         width="120">
@@ -53,6 +57,7 @@
         </el-table-column>
         <el-table-column
         prop="addTime"
+        sortable='custom'
         label="入库时间"
         width="120">
         </el-table-column>
@@ -86,7 +91,8 @@ export default {
             goodsData:[],       // 表格数据
             total:0,            // 总页数
             pageSize:10,        // 每页条数
-            currentPage:1       // 当前页
+            currentPage:1,      // 当前页
+            sort:'addTime',            // 排序方式，默认入库时间,降序
         }
     },
     methods:{
@@ -95,17 +101,14 @@ export default {
             let {data} = await this.$request.get('/goods',{
                 params:{
                     page:this.currentPage,
-                    size:this.pageSize
+                    size:this.pageSize,
+                    sort:this.sort
                 }
             });
             console.log();
             if(data.code===1){
                 this.goodsData = data.data.data;
                 this.total = data.data.amount;
-                this.$message({
-                    message: data.msg,
-                    type: 'success'
-                });
             }else{
                 this.$message.error(`${data.msg}`);
             }
@@ -114,12 +117,32 @@ export default {
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
             this.pageSize = val;
+            this.currentPage = 1;
             this.getSearch()
         },
         /* 3. 获取当前页 */
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
             this.currentPage = val;
+            this.getSearch()
+        },
+        /* 4. 排序 */
+        sortChange(data){
+            switch(data.order){
+                case 'descending':
+                    this.sort = data.prop+',-1';
+                    console.log(this.sort);
+                    break
+                case 'ascending':
+                    this.sort = data.prop+',1';
+                    console.log(this.sort);
+                    break
+                case null:
+                    this.sort = ''
+                    console.log(this.sort);
+                    break
+            }
+            console.log(this.sort);
             this.getSearch()
         }
     },

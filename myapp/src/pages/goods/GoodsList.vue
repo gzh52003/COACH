@@ -301,8 +301,31 @@ export default {
             })
         },
         /* 9.删除 */
-        deleteGoods(id){
-            console.log('删除商品',id);
+        async deleteGoods(id){
+            console.log(id);
+            /* 确定弹窗 */
+            try{
+                let result = await this.$confirm('此操作将永久删除该商品信息, 是否继续?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' });
+                if(result){
+                    /* 发送删除请求 */
+                    let {data} = await this.$request.delete(`/goods/${id}`);
+                    if(data.code===1){
+                        this.$message({
+                            type: 'success',
+                            message: 'delete success!'
+                        }); 
+                        this.getSearch()
+                    }else{
+                        this.$message.error('delete fail!');
+                    }
+                }
+            }
+            catch(err){
+                this.$message({
+                    type: 'info',
+                    message: 'cancel delete!'
+                }); 
+            }
         }
     },
     created(){

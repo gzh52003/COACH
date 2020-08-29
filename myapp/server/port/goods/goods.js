@@ -6,6 +6,7 @@ var fs = require('fs');
 const path = require('path');
 const {formatData} = require('../../utils/tools');
 
+/* 0. 图片上传配置 */
 var storage = multer.diskStorage({
 
     destination: path.join(__dirname,'../../static/pic/goods'),
@@ -17,7 +18,6 @@ var storage = multer.diskStorage({
         cb(null, arr[0] + '-' + Date.now() + '.' + arr[1]);
     }
 })
-
 var upload = multer({
     storage: storage
 });
@@ -53,8 +53,9 @@ router.post('/',upload.array('files', 1),async(req,res)=>{
     // addTime = addTime.slice(0,10);
 
     console.log(req.files[0]);  // 图片所有信息
-    console.log(gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime);
-    let url = `http://localhost:3000/uploads/${req.files[0].filename}`
+    // console.log(gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime);
+    
+    let url = `http://localhost:3000/pic/goods/${req.files[0].filename}`
     try{
         let result = await mongo.insert('goods',{
             gid:Number(gid),
@@ -64,23 +65,13 @@ router.post('/',upload.array('files', 1),async(req,res)=>{
             oldPrice:Number(oldPrice),
             storageNum:Number(storageNum),
             supplierName,
-            addTime
+            addTime,
+            fileName:req.files[0].originalname
         })
         res.send(formatData())
     }catch(err){
         res.send(formatData({code:0}))
     }
-
-    // let {gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
-    // /* 时间处理 */
-    // addTime = addTime.slice(0,10);
-    // try{
-    //     let result = await mongo.insert('goods',{gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime})
-    //     res.send(formatData())
-    // }catch(err){
-    //     res.send(formatData({code:0}))
-    // }
-
 })
 
 /* 3.根据id获取商品信息 */
@@ -95,12 +86,25 @@ router.get('/:id',async(req,res)=>{
 })
 
 /* 4.根据id修改商品信息 */
-router.put('/:id',async(req,res)=>{
+router.put('/:id',upload.array('files', 1),async(req,res)=>{
     
     const {id} = req.params;
     const {gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
 
-    let newData = {gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime};
+    let url = `http://localhost:3000/pic/goods/${req.files[0].filename}`
+
+    let newData = {
+        gid:Number(gid),
+        goodName,
+        goodPic:url,
+        salePrice:Number(salePrice),
+        oldPrice:Number(oldPrice),
+        storageNum:Number(storageNum),
+        supplierName,
+        addTime,
+        fileName:req.files[0].originalname
+    };
+
 
     try{
         let result = await mongo.update('goods',{_id:id},{$set:newData})

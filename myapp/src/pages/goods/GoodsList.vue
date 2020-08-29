@@ -243,11 +243,20 @@ export default {
         /* 6.打开编辑弹窗 */
         async editBefore(id){
             console.log('编辑商品',id);
-            this.isEdit = id;
-            this.dialogFormVisible = true;
+            this.isEdit = id;                   // 设置编辑弹窗开关
+            this.dialogFormVisible = true;      // 打开弹窗
+            this.fileList = [];                 // 清空图片回显
             let {data} = await this.$request.get(`/goods/${this.isEdit}`);
+            console.log(data);
             if(data.code){
+                /* 渲染表单 */
                 this.goodsForm = data.data.data[0];
+                /* 设置图片回显 */
+                let picData = {
+                    name:this.goodsForm.fileName,
+                    url:this.goodsForm.goodPic
+                }
+                this.fileList.push(picData)
             }else{
                 this.$message.error({
                     message:'get goodsInfo error!'
@@ -258,6 +267,8 @@ export default {
         addBefore(){
             console.log('新增商品');
             this.isEdit = null;
+            /* 清空图片列表 */
+            this.fileList = [];
             /* 打开弹窗 */
             this.dialogFormVisible = true;
             /* 清空表单、校验 */
@@ -272,9 +283,35 @@ export default {
                 if(valid){
                     /* 8.1 编辑 */
                     if(this.isEdit){
-                        let {data} = await this.$request.put(`/goods/${this.isEdit}`,{
-                            ...this.goodsForm
+                        /* 手动提交图片的关键 */
+                        this.$refs.upload.submit();
+
+                        /* 创建表单对象把表单数据写入其中 */
+                        let form = new FormData();
+                        form.append("gid", this.goodsForm.gid);
+                        form.append("goodName", this.goodsForm.goodName);
+                        form.append("salePrice", this.goodsForm.salePrice);
+                        form.append("oldPrice", this.goodsForm.oldPrice);
+                        form.append("storageNum", this.goodsForm.storageNum);
+                        form.append("supplierName", this.goodsForm.supplierName);
+                        form.append("addTime", this.goodsForm.addTime);
+
+                        console.log(this.fileList);
+
+                        /* 提取图片信息写入表单对象 */
+                        this.fileList.forEach(file=>{
+                            // form.append("files", file.raw);
+                            // form.append("fileNames", file.name);
+                            console.log(file);
+                        })
+
+                        let data = await this.$request({
+                            url:`/goods/${this.isEdit}`,
+                            method:'put',
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                            data:form
                         });
+
                         if(data.code===1){
                             this.$message({
                                 type:'success',

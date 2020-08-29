@@ -41,8 +41,8 @@
             label="商品图片"
             width="120">
                 <template v-slot:default="scope">
-                    <span class="demonstration" ><el-image style="width: 100px; height: 100px" :src="scope.row.goodPic"></el-image>
-                    </span>
+                    <!-- scope指整个数据对象。scope.row指当前行数据 -->
+                    <img :src="scope.row.goodPic" alt style="width:100px;height:100px;" />
                 </template>
             </el-table-column>
             <el-table-column
@@ -107,7 +107,24 @@
                     <el-input v-model="goodsForm.goodName" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop='goodPic' style='width:550px' label="商品图片" :label-width="formLabelWidth">
-                    <el-input v-model="goodsForm.goodPic" autocomplete="off"></el-input>
+                    <el-upload
+                        class="upload-demo"
+                        ref="upload"
+                        action="/goods"
+                        :file-list="fileList"
+                        :http-request="httpRequest"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :on-change="onChange"
+                        :before-remove="beforeRemove"
+                        :on-exceed="handleExceed"
+                        multiple
+                        :limit="1"
+                        name="photos"
+                        :auto-upload="false"
+                    >
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
                 </el-form-item>
                 <el-form-item prop='salePrice' style='width:550px' label="销售价" :label-width="formLabelWidth">
                     <el-input v-model.number="goodsForm.salePrice" autocomplete="off"></el-input>
@@ -122,7 +139,7 @@
                     <el-input v-model="goodsForm.supplierName" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop='addTime' style='width:550px' label="入库时间" :label-width="formLabelWidth">
-                    <el-date-picker v-model="goodsForm.addTime" type="date">
+                    <el-date-picker v-model="goodsForm.addTime" type="date" value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -149,7 +166,6 @@ export default {
             goodsForm:{
                 gid:'',
                 goodName:'',
-                goodPic:'',
                 salePrice:'',
                 oldPrice:'',
                 storageNum:'',
@@ -166,7 +182,9 @@ export default {
                 storageNum:{ required: true, message: '库存不能为空', trigger: 'blur' },
                 supplierName:{ required: true, message: '供应商不能为空', trigger: 'blur' },
                 addTime:{ required: true, message: '入库时间不能为空', trigger: 'blur' },
-            }
+            },
+            /* 图片信息 */
+            fileList:[]
         }
     },
     methods:{
@@ -273,10 +291,32 @@ export default {
                     }
                     /* 8.2 新增 */
                     else{
-                        let {data} = await this.$request.post('/goods',{
-                            ...this.goodsForm
+                        /* 手动提交图片的关键 */
+                        this.$refs.upload.submit();
+                        console.log(this.goodsForm.addTime);
+
+                        /* 创建表单对象把表单数据写入其中 */
+                        let form = new FormData();
+                        form.append("gid", this.goodsForm.gid);
+                        form.append("goodName", this.goodsForm.goodName);
+                        form.append("salePrice", this.goodsForm.salePrice);
+                        form.append("oldPrice", this.goodsForm.oldPrice);
+                        form.append("storageNum", this.goodsForm.storageNum);
+                        form.append("supplierName", this.goodsForm.supplierName);
+                        form.append("addTime", this.goodsForm.addTime);
+
+                        /* 提取图片信息写入表单对象 */
+                        this.fileList.forEach(file=>{
+                            form.append("files", file.raw);
+                            form.append("fileNames", file.name);
                         })
-                        /* 添加成功 */
+
+                        let {data} = await this.$request({
+                            url:'/goods',
+                            method:'post',
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                            data:form
+                        })
                         if(data.code===1){
                             this.$message({
                                 type:'success',
@@ -290,7 +330,7 @@ export default {
                             this.$message.error({
                                 message:'add error!'
                             })
-                        }   
+                        }  
                     }
                 /* 校验不通过 */
                 }else{
@@ -326,6 +366,39 @@ export default {
                     message: 'cancel delete!'
                 }); 
             }
+        },
+        /* 10.图片上传 */
+        /* 10.1 手动发送请求 */
+        httpRequest(file) {
+            console.log('httpRequest=',file);
+        },
+        /* 10.2 图片发生上传时 */
+        onChange(file, fileList) {
+            console.log('onChange=',file);
+            console.log('onChange=',fileList);
+            /* 图片信息赋值给fileList */
+            this.fileList = fileList;
+        },
+        /* 10.3 删除图片 */
+        handleRemove(file, fileList){
+            console.log('handleRemove=',file.url);
+            console.log('handleRemove=',fileList);
+        },
+        /* 10.4  */
+        handlePreview(file) {
+            console.log('handlePreview', file);
+        },
+        /* 10.5 提示信息 */
+        handleExceed(files, fileList) {
+            this.$message.warning(
+                `当前限制选择 1 个文件，本次选择了 ${
+                files.length
+                } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+            );
+        },
+        /* 10.6 删除前提示 */
+        beforeRemove(file) {
+            return this.$confirm(`确定移除 ${file.name}？`);
         }
     },
     created(){

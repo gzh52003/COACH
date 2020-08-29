@@ -3,7 +3,7 @@ const {PORT,...other} = require('./dep/config.json');
 const portUrl      = require('./port');
 const path         = require('path');
 const app          = express();
-app.use(express.static(path.join(__dirname,'./page'),{
+app.use(express.static(path.join(__dirname,'./static'),{
 
 }));
 

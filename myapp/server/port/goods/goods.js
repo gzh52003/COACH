@@ -1,7 +1,26 @@
 const express = require('express');
 const router  = express.Router();
 const mongo   = require('../../utils/mongo');
-const {formatData} = require('../../utils/tools')
+const multer = require('multer');
+var fs = require('fs');
+const path = require('path');
+const {formatData} = require('../../utils/tools');
+
+var storage = multer.diskStorage({
+
+    destination: path.join(__dirname,'../../static/pic/goods'),
+
+    filename: function (req, file, cb) {
+        let filename = file.originalname;   //3.jpg
+        let arr = filename.split('.');      //[3,'jpg']
+
+        cb(null, arr[0] + '-' + Date.now() + '.' + arr[1]);
+    }
+})
+
+var upload = multer({
+    storage: storage
+});
 
 /* 1.分页查询商品数据 */
 router.get('/',async (req,res) =>{
@@ -28,16 +47,39 @@ router.get('/',async (req,res) =>{
 });
 
 /* 2.新增商品信息 */
-router.post('/',async(req,res)=>{
-    let {gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
-    /* 时间处理 */
-    addTime = addTime.slice(0,10);
+router.post('/',upload.array('files', 1),async(req,res)=>{
+
+    let {gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
+    // addTime = addTime.slice(0,10);
+
+    console.log(req.files[0]);  // 图片所有信息
+    console.log(gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime);
+    let url = `http://localhost:3000/uploads/${req.files[0].filename}`
     try{
-        let result = await mongo.insert('goods',{gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime})
+        let result = await mongo.insert('goods',{
+            gid:Number(gid),
+            goodName,
+            goodPic:url,
+            salePrice:Number(salePrice),
+            oldPrice:Number(oldPrice),
+            storageNum:Number(storageNum),
+            supplierName,
+            addTime
+        })
         res.send(formatData())
     }catch(err){
         res.send(formatData({code:0}))
     }
+
+    // let {gid,goodName,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
+    // /* 时间处理 */
+    // addTime = addTime.slice(0,10);
+    // try{
+    //     let result = await mongo.insert('goods',{gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime})
+    //     res.send(formatData())
+    // }catch(err){
+    //     res.send(formatData({code:0}))
+    // }
 
 })
 

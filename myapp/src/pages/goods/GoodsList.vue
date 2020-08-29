@@ -180,7 +180,6 @@ export default {
                     goodName:this.searchMap.goodName
                 }
             });
-            console.log(data);
             if(data.code===1){
                 this.goodsData = data.data.data;
                 this.total = data.data.amount;
@@ -224,10 +223,18 @@ export default {
             this.getSearch()
         },
         /* 6.打开编辑弹窗 */
-        editBefore(id){
+        async editBefore(id){
             console.log('编辑商品',id);
             this.isEdit = id;
             this.dialogFormVisible = true;
+            let {data} = await this.$request.get(`/goods/${this.isEdit}`);
+            if(data.code){
+                this.goodsForm = data.data.data[0];
+            }else{
+                this.$message.error({
+                    message:'get goodsInfo error!'
+                })
+            }
         },
         /* 7.打开新增弹窗 */
         addBefore(){
@@ -247,9 +254,22 @@ export default {
                 if(valid){
                     /* 8.1 编辑 */
                     if(this.isEdit){
-                        console.log('编辑成功',this.isEdit);
-                        this.$refs['dialogForm'].resetFields();
-                        this.dialogFormVisible = false;
+                        let {data} = await this.$request.put(`/goods/${this.isEdit}`,{
+                            ...this.goodsForm
+                        });
+                        if(data.code===1){
+                            this.$message({
+                                type:'success',
+                                message:'put success!'
+                            });
+                            this.$refs['dialogForm'].resetFields();
+                            this.dialogFormVisible = false;
+                            this.getSearch()
+                        }else{
+                            this.$message.error({
+                                message:'put error!'
+                            })
+                        }
                     }
                     /* 8.2 新增 */
                     else{
@@ -264,7 +284,7 @@ export default {
                             })
                             this.$refs['dialogForm'].resetFields();
                             this.dialogFormVisible = false;
-                            // this.getSearch()
+                            this.getSearch()
                         /* 添加失败 */
                         }else{
                             this.$message.error({

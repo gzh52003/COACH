@@ -29,7 +29,7 @@ async function remove(colName,query){
     return result;
 }
 
-async function update(colName,query){
+async function update(colName,query,newDate){
     const {db,client} = await connect();
     const collection  = db.collection(colName);
     if(query._id && typeof query._id === 'string'){

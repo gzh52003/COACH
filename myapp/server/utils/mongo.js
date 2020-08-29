@@ -69,7 +69,6 @@ async function find(colName,query={},options={}){
         }else{
             val = -1;
         }
-        console.log(key,val);
         result  = result.sort({
             [key]:val
         })

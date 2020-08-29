@@ -3,6 +3,7 @@ const router  = express.Router();
 const mongo   = require('../../utils/mongo');
 const {formatData} = require('../../utils/tools')
 
+/* 1.分页查询商品数据 */
 router.get('/',async (req,res) =>{
     let {page=1,size=10,sort='addTime',goodName} = req.query;
     const skip = (page-1)*size;
@@ -25,6 +26,20 @@ router.get('/',async (req,res) =>{
         res.send(formatData({code:0}))
     }
 });
+
+/* 2.新增商品信息 */
+router.post('/',async(req,res)=>{
+    let {gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime} = req.body;
+    /* 时间处理 */
+    addTime = addTime.slice(0,10);
+    try{
+        let result = await mongo.insert('goods',{gid,goodName,goodPic,salePrice,oldPrice,storageNum,supplierName,addTime})
+        res.send(formatData())
+    }catch(err){
+        res.send(formatData({code:0}))
+    }
+
+})
 
 router.delete('/:id',async (req,res)=>{
     const {id} = req.params;

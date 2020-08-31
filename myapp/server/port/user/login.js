@@ -6,13 +6,16 @@ const mongo             = require('../../utils/mongo');
 
 router.get('/', async (req,res) => {
     let {username,password,vcode,mdl} = req.query;
+    console.log("login.session=",req.session)
+  
     if(vcode !== req.session.vcode){
         res.send(formatData({code : 10}))
         return;
     }
-    password = md5(password);
-    let result = await mongo.find('user',{username,password});
+    // password = md5(password);
+    let result = await mongo.find('infor',{username,password});
     if(result.length > 0){
+    
         let authorization;
         if(mdl === 'true'){
           authorization = token.create({username},"7d");
@@ -21,7 +24,9 @@ router.get('/', async (req,res) => {
         }
         result = result[0];
         result.authorization = authorization;
-        result.send(formatData({data:result}));
+        res.send(formatData({data:result}));
+       
+        return;
     }else{
         res.send(formatData({code:0}))
     }

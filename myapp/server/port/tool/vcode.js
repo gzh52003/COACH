@@ -13,9 +13,12 @@ router.get('/',async (req,res)=>{
         fontSize: 50,
         height: 54
     }
-
+    // 生成验证码
     const captcha = svgCaptcha.create(options);
     req.session.vcode = captcha.text.toLowerCase();
+    
+    console.log("vcode.session=",req.session)
+
     res.send(formatData({data:captcha.data}));
 })
 module.exports = router;

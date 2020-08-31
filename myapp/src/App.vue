@@ -1,6 +1,6 @@
 <template>
-  <nav>
-    <el-container>
+  <nav style="height:100%">
+    <el-container style="height:100%">
       <el-header class="header">
         <el-row>
           <el-col :span="12">
@@ -13,7 +13,7 @@
           <el-col :span="12">
             <div class="grid-content bg-purple-light" style="text-align: right">
               <el-button type="text">注册</el-button>
-              <el-button type="text">登录</el-button>
+              <el-button type="text" @click="goto('/login')">登录</el-button>
             </div>
           </el-col>
         </el-row>
@@ -21,11 +21,14 @@
       <el-container>
         <el-aside width="200px">
           <el-menu
-            :default-active="activeIndex"
-            mode="vertical"
-            @select="handleSelect"
-            :default-openeds="openMenu"
-            router
+            style="height:100%"
+          :default-active="activeIndex"
+          mode="vertical"
+          @select="changeMenu"
+          background-color="#545c64"
+          text-color="#fff"
+          :default-openeds="openMenu"
+          router
           >
             <template v-for="(item) in menu">
               <el-menu-item :key="item.path" v-if="!item.submenu" :index="item.path">
@@ -95,22 +98,18 @@ export default {
           path: "/goods",
           icon: "el-icon-s-fold",
           submenu: [
-            { text: "商品列表",
-              path: "/list",
-              icon: "el-icon-grape" },
+            { text: "商品列表", path: "/list", icon: "el-icon-grape" },
             {
               text: "商品库存",
               path: "/store",
               icon: "el-icon-shopping-cart-1",
             },
-            { text: "商品渠道",
-              path: "/channel",
-              icon: "el-icon-guide" },
+            { text: "商品渠道", path: "/channel", icon: "el-icon-guide" },
             {
-              text:"商品订单",
+              text: "商品订单",
               path: "/order",
-              icon: "el-icon-s-flag"
-            }  
+              icon: "el-icon-s-flag",
+            },
           ],
         },
       ],
@@ -134,13 +133,21 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style >
+html {
+  height: 100%;
+}
+body {
+  margin: 0;
+  height: 100%;
+}
 .router-link-active {
   color: #58bc58;
 }
 .header {
   line-height: 60px;
   color: blue;
+   background-color: rgba(84, 92, 100, 0.9);
 }
 .logo {
   color: blue;

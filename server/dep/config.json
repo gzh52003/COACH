@@ -1,0 +1,9 @@
+{
+    "PORT":3000,
+    "DATABASE":{
+        "DBNAME":"list",
+        "URL":"mongodb://localhost:27017"
+    },
+    "PRIVATEKEY":"ZQM"
+    
+}

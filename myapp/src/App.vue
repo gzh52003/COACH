@@ -12,53 +12,16 @@
           </el-col>
           <el-col :span="12">
             <div class="grid-content bg-purple-light" style="text-align: right">
-              <el-button type="text">注册</el-button>
-              <el-button type="text">登录</el-button>
+              <span>{{userInfo.username}} &nbsp;</span>
+              <el-button type="text" @click="logout" v-if="userInfo.authorization">退出</el-button>
+              <el-button type="text" @click="goto('/login')" v-else>登录</el-button>
             </div>
           </el-col>
         </el-row>
       </el-header>
       <el-container>
-        <el-aside width="200px">
-          <el-menu
-            :default-active="activeIndex"
-            mode="vertical"
-            @select="handleSelect"
-            :default-openeds="openMenu"
-            router
-          >
-            <template v-for="(item) in menu">
-              <el-menu-item :key="item.path" v-if="!item.submenu" :index="item.path">
-                <i :class="item.icon"></i>
-                {{item.text}}
-              </el-menu-item>
-              <el-submenu :index="item.path" :key="item.path" v-else>
-                <template v-slot:title :index="item.path">
-                  <i :class="item.icon"></i>
-                  {{item.text}}
-                </template>
-                <el-menu-item
-                  :index="item.path + sub.path"
-                  v-for="(sub) in item.submenu"
-                  :key="sub.path"
-                >
-                  <i :class="sub.icon"></i>
-                  {{sub.text}}
-                </el-menu-item>
-              </el-submenu>
-            </template>
-          </el-menu>
-        </el-aside>
-
         <el-main>
-          <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }"></el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-          </el-breadcrumb>
-
-          <div style="padding:10px">
             <router-view />
-          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -71,6 +34,7 @@ export default {
   name: "App",
   data() {
     return {
+      userInfo:{},
       activeIndex: "/home",
       openMenu: [],
       menu: [
@@ -85,7 +49,7 @@ export default {
           icon: "el-icon-user-solid",
           submenu: [
             { text: "添加用户", path: "/add", icon: "el-icon-finished" },
-            { text: "编辑用户", path: "/edit", icon: "el-icon-s-tools" },
+            // { text: "编辑用户", path: "/edit", icon: "el-icon-s-tools" },
             { text: "权限管理", path: "/auth", icon: "el-icon-s-platform" },
             { text: "用户列表", path: "/list", icon: "el-icon-s-unfold" },
           ],
@@ -117,10 +81,21 @@ export default {
       currentIndex: "",
     };
   },
+   watch:{
+    $route(to,from){
+      if(from.path === '/login'){
+        this.getUserInfo();
+
+      }
+
+      if(to.path === '/login'){
+        this.logout();
+      }
+    }
+  },
   methods: {
-    goto(path, idx) {
-      this.$router.push(path, idx);
-      this.currentIndex = idx;
+    goto(path) {
+      this.$router.push(path);
     },
     go() {
       this.$router.go(-1);
@@ -130,7 +105,23 @@ export default {
       this.openMenu[0] = indexPath[0];
       console.log(path);
     },
+    logout(){
+      localStorage.removeItem('userInfo');
+      this.userInfo = {};
+      this.$router.push('/login');
+    },
+    getUserInfo(){
+       const userInfo = localStorage.getItem('userInfo') || {};
+      try{
+        this.userInfo = JSON.parse(userInfo);
+      }catch(err){
+        this.userInfo = {}
+      }
+    }
   },
+  created(){
+     this.getUserInfo();
+    }
 };
 </script>
 

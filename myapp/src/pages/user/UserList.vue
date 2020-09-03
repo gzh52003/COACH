@@ -19,7 +19,7 @@
 
       </template>
       </el-table-column>
-      <el-table-column label="用户名" prop="name"  ></el-table-column>
+      <el-table-column label="用户名" prop="username"  ></el-table-column>
       <el-table-column prop="age" label="年龄"  ></el-table-column>
       <el-table-column prop="gender" label="性别"   show-overflow-tooltip></el-table-column>
       <el-table-column prop="address" label="地址"  ></el-table-column>
@@ -51,8 +51,9 @@
 <el-pagination
   background
   layout="prev, pager, next"
-  size="big"
-  :total="1000">
+  @current-change="changePage"
+  :page-size="size"
+  :total="total">
 </el-pagination>
     </div>
 </template>
@@ -62,7 +63,10 @@ export default {
     name:'userlist',
     data(){
         return{
-            userlist:[]
+            userlist:[],
+            page:1,
+            size:10,
+            total:0
         }
     },
     methods:{
@@ -83,14 +87,36 @@ export default {
        })
      },
      async goto(id){
-       this.$router.push('/user/edit');
+       this.$router.push({
+         name:'userEdit',
+         params:{id},
+         query:{
+           a:10,
+           b:20
+         }
+       });
        console.log(id)
+     },
+     async getData(){
+       const {page,size} = this;
+         const {data} = await this.$request.get('/user',{
+           params:{
+             page,
+             size
+           }
+         });
+         console.log(data.data.total);
+         this.total = data.data.total;
+         this.userlist = data.data.data;
+     },
+     changePage(page){
+       this.page = page;
+       this.getData();
      }
     },
    async created(){
-         const result = await this.$request.get('/user');
-         console.log(result.data.data);
-         this.userlist=result.data.data;
+         this.getData();
+
     }
 }
 </script>

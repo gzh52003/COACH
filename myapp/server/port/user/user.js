@@ -25,9 +25,10 @@ router.delete('/:id',async (req,res)=>{
 router.get('/:id',async (req,res)=>{
     const {id} = req.params;
     console.log(req.params);
-    const result = await mongo.find('user',{_id:id},{
+    const result = await mongo.find('infor',{_id:id},{
        field:{password:false}
     });
+    console.log(result);
     res.send(formatData({data:result[0]}));
 })
 

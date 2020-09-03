@@ -20,3 +20,4 @@ let goodList = mock.mock({
    }]
 })
 console.log(JSON.stringify(data));
+mongo.insert('goods',goodList.goodList)

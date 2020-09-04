@@ -7,7 +7,7 @@
       <el-table-column label="商品图片" prop="pic">
         <template v-slot:default="scope">
           <div class="pic">
-            <img :src="scope.row.pic" alt />
+            <img :src="scope.row.img" alt />
           </div>
         </template>
       </el-table-column>

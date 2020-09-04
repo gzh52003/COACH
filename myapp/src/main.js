@@ -6,7 +6,7 @@ import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
 import request from './tools/request'
 
-console.log(request)
+
 Vue.prototype.$request   = request;
 console.log(Vue)
 Vue.use(ElementUI)

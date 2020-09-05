@@ -2,8 +2,8 @@
   <div id="app">
 
     <router-view/>
-  <van-tabbar v-model="active" v-show="showMenu">
-  <van-tabbar-item icon="home-o" v-for="item in menu" :icon="item.icon" :badge="item.name === 'carts' ? carsum : '' " :key="item.name" :to="item.path">{{item.text}}</van-tabbar-item>
+  <van-tabbar v-model="active" v-show="showMenu" fixed placeholder>
+  <van-tabbar-item icon="home-o"      v-for="item in menu" :key="item.name" :icon='item.icon' :badge="item.name === 'carts' ? carsum : '' "  :to="item.path">{{item.text}}</van-tabbar-item>
   </van-tabbar>
   </div>
 </template>
@@ -23,8 +23,10 @@ Vue.use(Button);
 export default {
     data(){
       return{
+        
               active:0,
               showMenu:true,
+              placeholder:true,
       menu:[{
         name:'home',
         path:'/home',

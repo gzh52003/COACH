@@ -40,6 +40,11 @@ Vue.use(VueRouter)
     component:()=>import('../views/Carts.vue')
   },
   {
+    path:'/discover',
+    name:'discover',
+    component:()=>import('../views/Discover.vue')
+  },
+  {
    path: '/goods/:id',
    name: 'Goods',
    component:()=>import('../views/Goods.vue')

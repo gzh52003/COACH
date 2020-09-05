@@ -1,84 +1,96 @@
-const {MongoClient,ObjectId} = require('mongodb');
-const {PORT,DATABASE:{
-    DBNAME,URL
-}
-} =require('../dep/config.json');
+const { MongoClient, ObjectId } = require("mongodb");
+const {
+  PORT,
+  DATABASE: { DBNAME, URL },
+} = require("../dep/config.json");
 
-async function connect(){
-    const client = await MongoClient.connect(URL,{ useUnifiedTopology: true });
-    const db     = client.db(DBNAME);
-    return {client,db};
-}
-
-async function insert(colName,data){
-    const {db,client} = await connect();
-    const collection  = db.collection(colName);
-    const result = await collection[Array.isArray(data) ? 'insertMany' : 'insertOne'](data);
-    client.close();
-    return result;
+async function connect() {
+  const client = await MongoClient.connect(URL, { useUnifiedTopology: true });
+  const db = client.db(DBNAME);
+  return { client, db };
 }
 
-async function remove(colName,query){
-    const {db,client} = await connect();
-    if(query._id && typeof query._id === 'string'){
-        query._id = ObjectId(query._id);
-    }
-    const collection = db.collection(colName);
-    const result     = await collection.deleteMany(query);
-    client.close();
-    return result;
+async function insert(colName, data) {
+  const { db, client } = await connect();
+  const collection = db.collection(colName);
+  const result = await collection[
+    Array.isArray(data) ? "insertMany" : "insertOne"
+  ](data);
+  client.close();
+  return result;
 }
 
-async function update(colName,query){
-    const {db,client} = await connect();
-    const collection  = db.collection(colName);
-    if(query._id && typeof query._id === 'string'){
-        query._id = ObjectId(query._id);
-    }
-    const result  = await collection.updateMany(query,newDate);
-    client.close();
-    return result;
+async function remove(colName, query) {
+  const { db, client } = await connect();
+  if (query._id && typeof query._id === "string") {
+    query._id = ObjectId(query._id);
+  }
+  const collection = db.collection(colName);
+  const result = await collection.deleteMany(query);
+  client.close();
+  return result;
 }
 
-async function find(colName,query={},options={}){
-    const {client,db} = await connect();
-    const collection = db.collection(colName);
-    if(query._id && typeof query._id === 'string'){
-        query._id = ObjectId(query._id);
-    }
+async function update(colName, query) {
+  const { db, client } = await connect();
+  const collection = db.collection(colName);
+  if (query._id && typeof query._id === "string") {
+    query._id = ObjectId(query._id);
+  }
+  const result = await collection.updateMany(query, newDate);
+  client.close();
+  return result;
+}
 
-    const opt = {}
-    if(options.field){
-        opt.projection = options.field;
+async function find(colName, query = {}, options = {}) {
+  const { client, db } = await connect();
+  const collection = db.collection(colName);
+  if (query._id && typeof query._id === "string") {
+    query._id = ObjectId(query._id);
+  }
+
+  const opt = {};
+  if (options.field) {
+    opt.projection = options.field;
+  }
+  let result = collection.find(query, opt);
+  //获取查询结果的总数
+  const count =await result.count();
+
+  if (options.skip) {
+    result.skip(options.skip);
+  }
+  if (options.limit) {
+    result = result.limit(options.limit);
+  }
+  if (options.sort) {
+    let key, val;
+    key = options.sort[0];
+    if (options.sort.length > 1) {
+      val = options.sort[0];
+    } else {
+      val = -1;
     }
-    let result = collection.find(query,opt);
-    if(options.skip){
-        result.skip(options.skip)
-    }
-    if(options.limit){
-        result = result.limit(options.limit);
-    }
-    if(options.sort){
-        let key,val;
-        key = options.sort[0];
-        if(options.sort.length>1){
-            val = options.sort[0];
-        }else{
-            val = -1;
-        }
-        result  = result.sort({
-            [key]:val
-        })
-    }
-    result = await result.toArray();
-    client.close();
-    return result
+    result = result.sort({
+      [key]: val,
+    });
+  }
+  result = await result.toArray();
+  client.close();
+
+  if (options.total == 1) {
+    return {
+      total: count,
+      data: result,
+    };
+  }else{
+      return result;
+  }
 }
 
 module.exports = {
-    insert,
-    remove,
-    update,
-    find
-}
-
+  insert,
+  remove,
+  update,
+  find,
+};

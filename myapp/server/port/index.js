@@ -32,6 +32,7 @@ router.use('/reg',regRouter);
 router.use('/login',loginRouter);
 router.use('/upload',uploadRouter);
 
+// 验证token
 router.get('/jwtverify',(req,res)=>{
     const {authorization} = req.query;
     if(token.verify(authorization)){
@@ -41,5 +42,6 @@ router.get('/jwtverify',(req,res)=>{
     }
 });
 
+// 验证码
 router.use('/vcode',vcodeRouter);
 module.exports = router;

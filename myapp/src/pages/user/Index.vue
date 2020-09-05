@@ -1,29 +1,55 @@
 <template>
-  <nav style="height:100%">
-    <el-container style="height:100%">
-      <el-header class="header">
-        <el-row>
-          <el-col :span="12">
-            <div class="grid-content bg-purple">
-              <el-col :span="12" class="logo">
-                <i class="el-icon-s-opportunity"></i>后台管理
-              </el-col>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="grid-content bg-purple-light" style="text-align: right">
-              <span>{{userInfo.username}}</span>
-              <el-button type="text" @click="logout" v-if="userInfo.authorization">退出</el-button>
-              <el-button type="text" @click="goto('/login')">登录</el-button>
-            </div>
-          </el-col>
-        </el-row>
-      </el-header>
+ 
+  
+    
+      <el-container>
+        <el-aside width="200px">
+          <el-menu
+            style="height:100%"
+          :default-active="activeIndex"
+          mode="vertical"
+         
+          background-color="#545c64"
+          text-color="#fff"
+          :default-openeds="openMenu"
+          router
+          >
+            <template v-for="(item) in menu">
+              <el-menu-item :key="item.path" v-if="!item.submenu" :index="item.path">
+                <i :class="item.icon"></i>
+                {{item.text}}
+              </el-menu-item>
+              <el-submenu :index="item.path" :key="item.path" v-else>
+                <template v-slot:title :index="item.path">
+                  <i :class="item.icon"></i>
+                  {{item.text}}
+                </template>
+                <el-menu-item
+                  :index="item.path + sub.path"
+                  v-for="(sub) in item.submenu"
+                  :key="sub.path"
+                >
+                  <i :class="sub.icon"></i>
+                  {{sub.text}}
+                </el-menu-item>
+              </el-submenu>
+            </template>
+          </el-menu>
+        </el-aside>
 
-      <router-view />
-    </el-container>
-    <!-- <button @click="go">回退</button> -->
-  </nav>
+        <el-main>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }"></el-breadcrumb-item>
+            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+          </el-breadcrumb>
+
+          <div style="padding:10px">
+            <router-view />
+          </div>
+        </el-main>
+      </el-container>
+   
+
 </template>
 
 <script>
@@ -31,7 +57,6 @@ export default {
   name: "App",
   data() {
     return {
-      userInfo: {},
       activeIndex: "/home",
       openMenu: [],
       menu: [
@@ -74,17 +99,6 @@ export default {
       currentIndex: "",
     };
   },
-  watch: {
-    $route(to,from) {
-      if(from.path === '/login'){
-         this.getUserInfo();
-      }
-      if(to.path === '/login'){
-        this.logout();
-      }
-     
-    },
-  },
   methods: {
     goto(path, idx) {
       this.$router.push(path, idx);
@@ -98,23 +112,6 @@ export default {
       this.openMenu[0] = indexPath[0];
       console.log(path);
     },
-    logout() {
-      localStorage.removeItem("userInfo");
-      this.userInfo = {};
-      this.$router.push("/login");
-    },
-    getUserInfo() {
-      const userInfo = localStorage.getItem("userInfo") || {};
-      try {
-        this.userInfo = JSON.parse(userInfo);
-      } catch (error) {
-        this.userInfo = {};
-      }
-    },
-  },
-
-  created() {
-    this.getUserInfo();
   },
 };
 </script>
@@ -127,14 +124,13 @@ body {
   margin: 0;
   height: 100%;
 }
-
 .router-link-active {
   color: #58bc58;
 }
 .header {
   line-height: 60px;
   color: blue;
-  background-color: rgba(84, 92, 100, 0.9);
+   background-color: rgba(84, 92, 100, 0.9);
 }
 .logo {
   color: blue;

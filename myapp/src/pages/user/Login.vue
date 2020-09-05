@@ -92,10 +92,14 @@ export default {
               type: "success",
             });
              alert("submit!");
-             this.$router.replace('/home');
+               //把用户信息写入本地存储
+             localStorage.setItem("userInfo",JSON.stringify(data.data));
 
-             //把用户信息写入本地存储
-             localStorage.setItem("userInfo",JSON.stringify(data.data))
+
+             const {redirectTo='/home'} = this.$route.query;
+             this.$router.replace(redirectTo);
+
+           
           }
          
         } else {

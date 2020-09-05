@@ -35,7 +35,10 @@ let arr = [{
    "addTime" : "2020-09-03",
    "praise"  : "299",
    "sales"   : "1278",
-   "tag" :"男鞋"
+   "tag" :"男鞋",
+   "inv" : 129,
+   "num" : 1,
+   "checked" :false
 }, {
   "img": "/img/2.jpg",
   "title": "安踏海沃德理发店配色GH1男鞋篮球鞋2020新款篮球系列",
@@ -45,7 +48,10 @@ let arr = [{
   "addTime" : "2010-09-03",
   "praise"  : "199",
   "sales"   : "178",
-  "tag" :"女鞋"
+  "tag" :"女鞋",
+  "inv" : 1,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/3.jpg",
   "title": "安踏男鞋要疯3代五城城市特供款狂潮外场战靴篮球鞋",
@@ -55,7 +61,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "299",
   "sales"   : "1978",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 9,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/4.jpg",
   "title": "安踏男鞋汤普森KT4低帮篮球鞋篮球系列kt",
@@ -65,7 +74,10 @@ let arr = [{
   "addTime" : "2000-09-23",
   "praise"  : "299",
   "sales"   : "4278",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 19,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/5.jpg",
   "title": "安踏男鞋NASA联名跑鞋2020新款",
@@ -75,7 +87,10 @@ let arr = [{
   "addTime" : "2008-04-03",
   "praise"  : "1299",
   "sales"   : "9278",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/6.jpg",
   "title": "【预计发货时间9.10】安踏男鞋星标系列星岚跑鞋2020新款",
@@ -85,7 +100,10 @@ let arr = [{
   "addTime" : "2006-11-03",
   "praise"  : "12299",
   "sales"   : "6278",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 29,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/7.jpg",
   "title": "【预计发货时间9.10】’安踏男鞋星标系列星峦跑鞋2020新款",
@@ -95,7 +113,10 @@ let arr = [{
   "addTime" : "2018-06-03",
   "praise"  : "499",
   "sales"   : "12668",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 12,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/8.jpg",
   "title": "安踏男鞋综训鞋2020新款",
@@ -105,7 +126,10 @@ let arr = [{
   "addTime" : "2019-06-03",
   "praise"  : "699",
   "sales"   : "12078",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 8,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/9.jpg",
   "title": "安踏男鞋跑鞋2020新款",
@@ -115,7 +139,10 @@ let arr = [{
   "addTime" : "2016-12-03",
   "praise"  : "4999",
   "sales"   : "12178",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 14,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/10.jpg",
   "title": "安踏男鞋跑鞋2020新款",
@@ -125,7 +152,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "2939",
   "sales"   : "10278",
-  "tag" :"女鞋"
+  "tag" :"女鞋",
+  "inv" : 52,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/11.jpg",
   "title": "【预计发货时间9月10日】安踏男鞋星标系列星岳篮球鞋2020新款",
@@ -135,7 +165,10 @@ let arr = [{
   "addTime" : "2020-08-03",
   "praise"  : "99",
   "sales"   : "12278",
-  "tag" :"男鞋"
+  "tag" :"男鞋",
+  "inv" : 14,
+  "num" : 1,
+  "checked" :false
 } , {
   "img": "/img/ny1.jpg",
   "title": "安踏女服针织运动外套2020新款",
@@ -145,7 +178,10 @@ let arr = [{
   "addTime" : "2020-04-03",
   "praise"  : "49",
   "sales"   : "278",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 25,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny2.jpg",
   "title": "安踏女服针织运动外套2020新款",
@@ -155,7 +191,10 @@ let arr = [{
   "addTime" : "2020-07-03",
   "praise"  : "79",
   "sales"   : "1228",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 24,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny3.jpg",
   "title": "安踏女服针织运动外套2020新款",
@@ -165,7 +204,10 @@ let arr = [{
   "addTime" : "2020-07-03",
   "praise"  : "79",
   "sales"   : "12528",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 10,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny4.jpg",
   "title": "安踏女服套头卫衣2020新款",
@@ -175,7 +217,10 @@ let arr = [{
   "addTime" : "2020-07-03",
   "praise"  : "79",
   "sales"   : "18",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 14,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny5.jpg",
   "title": "安踏女服中国系列连帽卫衣2020新款",
@@ -185,7 +230,10 @@ let arr = [{
   "addTime" : "2020-01-03",
   "praise"  : "739",
   "sales"   : "148",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 19,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny6.jpg",
   "title": "安踏女裤针织运动长裤",
@@ -195,7 +243,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "7139",
   "sales"   : "48",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny7.jpg",
   "title": "安踏女裤针织九分裤长裤2020新款",
@@ -205,7 +256,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "70139",
   "sales"   : "41118",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 2,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/ny8.jpg",
   "title": "安踏女裤针织九分裤长裤2020新款",
@@ -215,7 +269,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "70139",
   "sales"   : "41118",
-  "tag" :"女衣"
+  "tag" :"女衣",
+  "inv" : 7,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y1.jpg",
   "title": "安踏男服套头卫衣2020新款",
@@ -225,7 +282,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "713",
   "sales"   : "418",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y2.jpg",
   "title": "安踏男服套头卫衣",
@@ -235,7 +295,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "13",
   "sales"   : "48",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y3.jpg",
   "title": "安踏男服卫衣套头圆领长袖针织运动2020新款",
@@ -245,7 +308,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "1003",
   "sales"   : "1248",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y4.jpg",
   "title": "安踏2020年新品男款套头卫衣",
@@ -255,7 +321,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "12003",
   "sales"   : "12408",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 119,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y5.jpg",
   "title": "安踏男服输攻墨守套头卫衣2020新款",
@@ -265,7 +334,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "12003",
   "sales"   : "12408",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 129,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y6.jpg",
   "title": "安踏男服输攻墨守连帽卫衣2020新款",
@@ -275,7 +347,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "120003",
   "sales"   : "102408",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 9,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y7.jpg",
   "title": "安踏男服运动裤速干束脚休闲修身小脚长裤",
@@ -285,7 +360,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "130003",
   "sales"   : "142408",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 49,
+  "num" : 1,
+  "checked" :false
 }, {
   "img": "/img/y8.jpg",
   "title": "安踏男款针织运动长裤",
@@ -295,7 +373,10 @@ let arr = [{
   "addTime" : "2020-09-03",
   "praise"  : "30003",
   "sales"   : "146408",
-  "tag" :"男衣"
+  "tag" :"男衣",
+  "inv" : 39,
+  "num" : 1,
+  "checked" :false
 } ];
 // console.log(data)
 mongo.insert('goods',arr);

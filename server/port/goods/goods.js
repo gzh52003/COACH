@@ -30,6 +30,12 @@ router.get('/:id',async (req,res)=>{
         res.send(formatData({code:0}));
     }
 })
-
+router.get('/:id/inv',async (req,res)=>{
+    const {id} = req.params;
+    console.log(id);
+    const result = await mongo.find('goods',{_id:id},{
+    });
+    res.send(formatData({data:{inv:result[0].inv,num:result[0].num}}));
+})
 
 module.exports = router;

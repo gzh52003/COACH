@@ -31,9 +31,19 @@ Vue.use(VueRouter)
   },
   {
     path:'/login',
-    name:'name',
+    name:'Login',
     component:()=>import('../views/Login.vue')
   },
+  {
+    path:'/discover',
+    name:'Discover',
+    component:()=>import('../views/Discover.vue')
+   },
+   {
+    path:'/mine',
+    name:'Mine',
+    component:()=>import('../views/Mine.vue')
+   },
   {
     path:'/carts',
     name:'carts',

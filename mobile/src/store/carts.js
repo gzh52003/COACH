@@ -1,109 +1,73 @@
-import request from '../utils/request'
-import {Notify} from 'vant'
-import { notify } from '../../../../server/port/goods/goods';
-
-const cart = {
-    state:{
-        goodslist:[
-            {
-                "img": "/img/y5.jpg",
-                "title": "安踏男服输攻墨守套头卫衣2020新款",
-                "price": " 199.00",
-                "qty" : 199,
-                "salePrice":" 139.00",
-                "addTime" : "2020-09-03",
-                "praise"  : "12003",
-                "sales"   : "12408",
-                "tag" :"男衣",
-                "inv" : 129,
-                "num" : 1,
-                "checked" :false
-              }, {
-                "img": "/img/y6.jpg",
-                "title": "安踏男服输攻墨守连帽卫衣2020新款",
-                "price": " 279.00",
-                "qty" : 149,
-                "salePrice":" 179.00",
-                "addTime" : "2020-09-03",
-                "praise"  : "120003",
-                "sales"   : "102408",
-                "tag" :"男衣",
-                "inv" : 9,
-                "num" : 1,
-                "checked" :false
-              }, {
-                "img": "/img/y7.jpg",
-                "title": "安踏男服运动裤速干束脚休闲修身小脚长裤",
-                "price": " 199.00",
-                "qty" : 1419,
-                "salePrice":" 119.00",
-                "addTime" : "2020-09-03",
-                "praise"  : "130003",
-                "sales"   : "142408",
-                "tag" :"男衣",
-                "inv" : 49,
-                "num" : 1,
-                "checked" :false
-              }, {
-                "img": "/img/y8.jpg",
-                "title": "安踏男款针织运动长裤",
-                "price": " 169.00",
-                "qty" : 1419,
-                "salePrice":" 119.00",
-                "addTime" : "2020-09-03",
-                "praise"  : "30003",
-                "sales"   : "146408",
-                "tag" :"男衣",
-                "inv" : 39,
-                "num" : 1,
-                "checked" :false
-              } 
-        ]
-    },
-    getters:{
-        totalPrice(state,getters,rootState,rootGetters){
-            return state.goodslist.reduce((pre,cur)=>pre+cur.salePrice*cur.item.qty,0)*100;
-        },
-        test(){
-            return 'cart'
-        }
-    },
-    mutations:{
-        initCart(state,data){
-            state.goodslist = data;
-        },
-        add(state,data){
-            state.goodslist.unshift(goods)
-        },
-        changeQty(state,{_id,qty}){
-            state.goodslist = state.goodslist.map(item=>{
-                if(item._id === _id){
-                    item.qty = qty;
-                }
-                return item;
-            });
-            console.log(state.goodslist)
-        },
-        remove(state,_id){
-            state.goodslist = state.goodslist.filter(item=>item._id!==_id)
-        },
-        clear(state){
-            state.goodslist = []
-        }
-    },
-    actions:{
-        async changeQtyAsync(context,{_id,qty}){
-            const {data:inv} = await request.get(`/goods/${_id}/inv`);
-            if(inv>qty){
-             notify({type: 'danger',message:'库存不足'})
-             qty = inv;     
-            }
-            context.commit('changeQty',{_id:qty})
-        },
-        async GamepadHapticActuator(){
-            const {data} = await request.get(`/cart`);
-            context.commit('initCart',data.data)
-        }
+import request from '../utils/request';
+import {Notify} from 'vant';
+const carts = {
+    
+  state:{
+    goodslist:[
+      {
+        "_id" : "5f52ff1e0189f72c88a06c08",
+        "img" : "/img/1.jpg",
+        "title" : "安踏KT5情人节配色男篮球鞋2020新品",
+        "price" : " 649.00",
+        "qty" : 7,
+        "salePrice" : " 999.00",
+        "addTime" : "2020-09-03",
+        "praise" : "299",
+        "sales" : "1278",
+        "tag" : "男鞋",
+        "inv" : 1,
+        "num" : 1,
+        "checked" : false
     }
+    ]
+  },
+  mutations:{
+    add(state,payload){
+       console.log(payload,'aaaaaaa')
+      state.goodslist.unshift(payload);
+      console.log('add 2 cart',state,payload);
+    },
+    changeNum(state,payload){
+     const {_id:id,num:curNum} = payload;
+     console.log(id,curNum)
+     state.goodslist = state.goodslist.map(item=>{
+       if(item._id === id){
+         item.num = curNum;
+       }
+       return item;
+     })
+    },
+    removeItem(state,payload){
+      console.log(payload)
+      state.goodslist = state.goodslist.filter(item=>item._id !== payload);
+    },
+    clearItem(state,payload){
+      state.goodslist = [];
+    }
+  },
+  actions:{
+  async changeAsyncNum(context,payload){
+       let {_id,num} = payload;
+       const result=await request.get(`/goods/${_id}/inv`);
+       let {data} = result;
+       let n =data.data.inv;
+       console.log(num,n,'1')
+        if(n<num){
+          num=n;
+
+         Notify('库存不足');
+       } 
+       context.commit('changeNum',{_id,num});
+
+      
+
+    }
+  },
+  getters:{
+      totalPrice(state,getters,rootState,rootGetters){
+          return state.goodslist.reduce((pre,cur)=>pre+cur.salePrice*cur.num,0)*100;
+      }
+  }
+
 }
-export default cart;
+export default carts;

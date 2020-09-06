@@ -25,9 +25,10 @@ export default {
     methods:{
       onClickLeft(value) {
       console.log(value);
-      this.$router.push({
-          name:'Home'
-      });
+      // this.$router.push({
+      //     name:'Home'
+      // });
+      this.$router.go(-1)
     },
     onClickRight(value) {
       console.log(value);

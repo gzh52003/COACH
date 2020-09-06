@@ -3,9 +3,7 @@ const common = {
         showTabbar:true
     },
     getters:{
-        test(){
-            return 'common';
-        }
+
     },
     mutations:{
         displayTabbar(state,payload){

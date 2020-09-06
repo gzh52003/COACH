@@ -37,5 +37,13 @@ router.get('/:id/inv',async (req,res)=>{
     });
     res.send(formatData({data:{inv:result[0].inv,num:result[0].num}}));
 })
+router.post('/dis',async (req,res)=>{
+
+    let {tag} = req.body;
+ 
+    const result = await mongo.find('goods',{tag});
+    console.log(1,'result')
+    res.send(formatData({data:{result}}));
+})
 
 module.exports = router;

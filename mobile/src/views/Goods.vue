@@ -92,7 +92,6 @@ export default {
       }else{
         const goods = {
           ...this.data,
-          num:1
         }
 
         this.$store.commit("add", goods);
@@ -121,21 +120,20 @@ export default {
     const { id } = this.$route.params;
     this.getData(id);
     this.getRecommend();
-    this.$parent.showMenu = false;
   },
   computed: {
    cartlist() {
-      return this.$store.state.goodslist;
+      return this.$store.state.carts.goodslist;
     },
     carSum() {
-      return this.$store.state.goodslist.length;
+      return this.$store.state.carts.goodslist.length;
     },
   },
-  mounted() {
-    this.$parent.showMenu = false;
+    mounted(){
+   this.$store.commit('displayTabbar',false)
   },
   destroyed() {
-    this.$parent.showMenu = true;
+    this.$store.commit('displayTabbar',true)
   },
   /*   watch:{
       '$route':function(to,from){

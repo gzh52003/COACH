@@ -15,13 +15,11 @@
       </template>
     </van-nav-bar>
 
-    <van-popup v-model="show" position="left" :style="{ height: '100%' }">
-      内容4564564654546
-    </van-popup>
+    <van-popup v-model="show" position="left" :style="{ height: '100%' }">内容4564564654546</van-popup>
 
     <!-- 商品 -->
 
-    <van-tabs>
+    <van-tabs @click="onClick">
       <van-tab title="新品">
         <van-list
           v-model="loading"
@@ -31,7 +29,7 @@
           offset="100"
         >
           <van-grid :border="false" :column-num="2">
-            <van-grid-item v-for="item in goodslist" :key="item.num">
+            <van-grid-item v-for="item in goodslist" :key="item._id">
               <van-image :src="item.img" />
               <h4>{{ item.title }}</h4>
               <p class="price">
@@ -41,8 +39,10 @@
             </van-grid-item>
           </van-grid>
         </van-list>
-        <!-- <van-grid :border="false" :column-num="2">
-          <van-grid-item v-for="item in goodslist" :key="item.num">
+      </van-tab>
+      <van-tab title="热销">
+        <van-grid :border="false" :column-num="2">
+          <van-grid-item v-for="item in list" :key="item._id">
             <van-image :src="item.img" />
             <h4>{{ item.title }}</h4>
             <p class="price">
@@ -50,11 +50,13 @@
               <span>{{ item.salePrice }}</span>
             </p>
           </van-grid-item>
-        </van-grid> -->
+        </van-grid>
       </van-tab>
-      <van-tab title="热销"> </van-tab>
       <van-tab>
-        <template #title> 价格 <van-icon name="down"/></template>
+        <template #title>
+          价格
+          <van-icon name="down" />
+        </template>
         内容
       </van-tab>
     </van-tabs>
@@ -76,6 +78,7 @@ import {
   Tabs,
   Popup,
   List,
+  Toast,
 } from "vant";
 
 Vue.use(List);
@@ -97,6 +100,7 @@ export default {
       show: false,
       fixed: true,
       placeholder: true,
+       
       list: [],
       loading: false,
       finished: false,
@@ -114,7 +118,7 @@ export default {
         } = await this.$request("/goods", {
           params: {
             size: this.size11,
-            sort: "sales",
+            sort: "addTime",
             total: 0,
           },
         });
@@ -127,7 +131,23 @@ export default {
         }
       }, 1000);
     },
+
+    async onClick(name, title) {
+      if (title == "热销") {
+        
+        const { data } = await this.$request("/goods", {
+          params: {
+            
+            sort: "salePrice,1"
+            
+          },
+        });
+
+        this.list = data.data.data;
+      }
+    },
   },
+
   // async created() {
   //   const {
   //     data: { data: recommed },

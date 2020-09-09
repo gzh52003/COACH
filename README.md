@@ -23,8 +23,7 @@
     ├─utils   工具包
     └─views   页面
 ## 项目页面截图
- ![](./mobile/mobile/public/img/01.png)
- ![](./mobile/mobile/public/img/02.png)
- ![](./mobile/mobile/public/img/03.png)
- ![](./mobile/mobile/public/img/04.png)
-
+    <img src="./mobile/mobile/public/img/01.png" alt="">
+    <img src="./mobile/mobile/public/img/02.png" alt="">
+    <img src="./mobile/mobile/public/img/03.png" alt="">
+    <img src="./mobile/mobile/public/img/04.png" alt="">

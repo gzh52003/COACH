@@ -23,8 +23,8 @@
     ├─utils   工具包
     └─views   页面
 ## 项目页面截图
- ![](/img/01.png)
- ![](/img/02.png)
- ![](/img/03.png)
- ![](/img/04.png)
+ ![](mobile\mobile\public\img\01.png)
+ ![](mobile\mobile\public\img\02.png)
+ ![](mobile\mobile\public\img\03.png)
+ ![](mobile\mobile\public\img\04.png)
 

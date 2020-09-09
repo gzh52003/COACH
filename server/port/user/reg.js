@@ -5,12 +5,12 @@ const mongo            = require('../../utils/mongo');
 
 router.post('/',async (req,res)=>{
     let {username,password} = req.body;
-    console.log(req.body);
+    console.log(req.body,'reg');
     password = md5(password);
     console.log(username)
     let result;
     try{
-        result = await mongo.insert('user',{username,password});
+        result = await mongo.insert('infor',{username,password});
         res.send(formatData());
     }catch(err){
         res.send(formatData({code}))
@@ -19,7 +19,7 @@ router.post('/',async (req,res)=>{
 
 router.get('/check',async (req,res)=>{
     const {username} = req.query;
-    console.log(username)
+    console.log(username,'check')
     const result     = await mongo.find('infor',{username});
     if(result.length>0){
         res.send(formatData({code:0}))

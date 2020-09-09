@@ -1,17 +1,21 @@
 <template>
   <div class="home">
-  <template>
+  
   <van-sticky>
   <form action="/">
   <van-search
-    v-model="value"
     show-action
     placeholder="请输入搜索关键词"
-    @search="onSearch"
     @cancel="onCancel"
+    @click.stop="fadeClassify"
+    @input="content"
   />
  </form>
-  </van-sticky>
+ </van-sticky>
+ <search-list v-show="getShowBool"></search-list>
+ <div v-show="mianShow">
+ 
+  
  <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" >
   <van-swipe-item v-for="(images, index) in images" :key="index"><img v-lazy="images" /></van-swipe-item>
 </van-swipe>
@@ -33,9 +37,11 @@
   </van-grid-item>
 </van-grid>
 <van-divider style="margin-bottom: 50px;">我也是有底线的_o_</van-divider>
- </template>
 
+ </div>
+  
   </div>
+
 </template>
 
 <script>
@@ -51,6 +57,10 @@ import star from '../components/Star';
 import related from '../components/Related'
 import { Sticky } from 'vant';
 import { Divider } from 'vant';
+import search from './Search';
+import throttle from "../utils/throttle";
+import request from "../utils/request";
+import searchList from "../components/Search";
 
 Vue.use(Divider);
 Vue.use(Sticky);
@@ -64,6 +74,14 @@ Vue.use( Toast )
 Vue.use(Search);
 export default {
   name: 'Home',
+  computed:{
+    getShowBool(){
+      return this.$store.getters.getSearchBool
+    },
+    mianShow(){
+    return  this.$store.getters.getShowBool;
+    }
+  },
   data(){
     return {
       images:[
@@ -84,12 +102,37 @@ export default {
     }
   },
   methods:{
-   onSearch(v){
-
+    fadeClassify(e) {
+      this.$store.dispatch('trgChangeSearchBool',{bool:true})
+      this.$store.commit('displayTabbar',false);
+      this.$store.dispatch('trgChangeShowBool',{bool:false})  
+    },
+   onCancel(){
+      this.$store.dispatch('trgChangeSearchBool',{bool:false})
+      this.$store.commit('displayTabbar',true);
+      this.$store.dispatch('trgChangeShowBool',{bool:true})   
    },
-   onCancel(v){
-     
-   },
+    content(value){
+      if(typeof value !== 'string') return false;
+      let val = value.trim();
+      let store = this.$store;
+    async  function getSearchListData(payload){
+        let data =await request.get('/goods',{
+          params:{
+            size:''
+          }
+        });
+        let ephemeralData = data.data.data.data;
+        let searchResult =  ephemeralData.map(item=>{
+          if(item.title.indexOf(val) !== -1 || item.tag.indexOf(val) !== -1){
+            return item;
+          }
+        })
+        let result   = searchResult.filter(item=> item!== undefined);
+        payload.dispatch('trgChangeArr',{data:result});
+      }
+      throttle(getSearchListData(store), 500)
+    },
    gotoDetail(id){
      this.$router.push({
        name:'Goods',
@@ -101,7 +144,8 @@ export default {
   },
   components:{
     star:star,
-    related:related
+    related:related,
+    searchList
   },
  async created(){
     const {data:{data:recommed}} = await this.$request('/goods',{
@@ -113,7 +157,13 @@ export default {
     });
     console.log(recommed)
     this.indexgoods = recommed;
+  },
+  beforeCreate(){
+       this.$store.dispatch('trgChangeSearchBool',{bool:false})
+       this.$store.commit('displayTabbar',true); 
+       this.$store.dispatch('trgChangeShowBool',{bool:true})
   }
+  
 }
 </script>
 <style scoped lang="scss">

@@ -41,12 +41,13 @@ async function update(colName,query,newDate){
 }
 
 async function find(colName,query={},options={}){
+    console.log(options , 'server')
     const {client,db} = await connect();
     const collection = db.collection(colName);
     if(query._id && typeof query._id === 'string'){
         query._id = ObjectId(query._id);
     }
-
+ 
     const opt = {}
     if(options.field){
         opt.projection = options.field;
@@ -63,6 +64,7 @@ async function find(colName,query={},options={}){
         let key,val;
         key = options.sort[0];
         if(options.sort.length>1){
+            console.log('aaaaaaaa',options.sort[0])
             val = options.sort[1]*1;
         }else{
             val = -1;

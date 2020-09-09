@@ -3,14 +3,19 @@ const router  = express.Router();
 const mongo   = require('../../utils/mongo');
 const {formatData} = require('../../utils/tools');
 
-router.get('/',async (req,res) =>{
-    let {page=1,size=10,sort='add_time',total=1} = req.query;
-    const skip = (page-1)*size;
-    const limit = size*1;
-    sort = sort.split(',');
-    const result = await mongo.find('goods',{},{skip,limit,sort,total});
+router.get('/', async (req, res) => {
+    let {page=1,size=10,sort="add_time",total=1} = req.query;
+    const skip = (page-1)*size; //0
+    const limit = size*1; //10
+
+    
+    // 处理排序参数
+    sort = sort.split(',');// ['price'],['price','-1']
+    // 查询所有商品
+    const result = await mongo.find('goods',{},{skip,limit,sort,total})
+
     res.send(formatData({data:result}));
-});
+})
 
 router.delete('/:id',async (req,res)=>{
     const {id} = req.params;

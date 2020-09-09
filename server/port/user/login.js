@@ -6,9 +6,12 @@ const mongo             = require('../../utils/mongo');
 
 router.get('/', async (req,res) => {
     let {username,password,vcode,mdl} = req.query;
-    if(vcode !== req.session.vcode){
+    console.log(username,password,vcode,mdl,"server")
+    if(vcode){
+      if(vcode !== req.session.vcode){
         res.send(formatData({code : 10}))
         return;
+      }
     }
     password = md5(password);
     let result = await mongo.find('infor',{username,password});

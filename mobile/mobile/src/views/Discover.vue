@@ -21,17 +21,24 @@
           <van-search
             v-model="value"
             show-action
-            @search="onSearch"
             @cancel="onCancel"
             @click="fadeClassify"
+            @input="content"
           />
         </form>
       </van-col>
     </van-row>
+
+    <search-list v-show='getShowBool'></search-list>
+
     <van-divider></van-divider>
-    <div id="main">
+    <div id="main" v-show="mianShow">
       <van-image :src="getAdv" />
-      
+      <div class="btn_group"> 
+      <van-button plain type="primary" size='mini' color='blue' @click="salesSort">销量</van-button>
+      <van-button plain type="primary" size='mini' color='blue' @click="priceSort">价格</van-button>
+      <van-button plain type="primary" size='mini' color='blue' @click="praiseSort">好评</van-button>
+      </div>
         <h4 class="border_tit">
                 <p v-text="titleArr[0]"></p>
         </h4>
@@ -48,6 +55,10 @@
         <p class="hotPrice">
           <del>{{item.price}}</del>
           <span>{{item.salePrice}}</span>
+        </p>
+        <p class="goodInfo">
+         <span>已销售{{item.sales | number}}</span>
+         <span>已评价{{item.praise | number}}</span>
         </p>
       </van-grid-item>
     </van-grid>
@@ -67,6 +78,10 @@
           <del>{{item.price}}</del>
           <span>{{item.salePrice}}</span>
         </p>
+          <p class="goodInfo">
+         <span>已销售{{item.sales | number}}</span>
+         <span>已评价{{item.praise | number}}</span>
+        </p>
       </van-grid-item>
     </van-grid>
          <h4 class="border_tit">
@@ -85,6 +100,10 @@
           <del>{{item.price}}</del>
           <span>{{item.salePrice}}</span>
         </p>
+          <p class="goodInfo">
+         <span>已销售{{item.sales | number}}</span>
+         <span>已评价{{item.praise | number}}</span>
+        </p>
       </van-grid-item>
     </van-grid>        
       <div
@@ -93,13 +112,14 @@
       >
       <h1>KEEP MOVING 安踏集团简介</h1>
       安踏集团是一家专门从事设计、生产、销售运动鞋服、配饰等运动装备的综合性、多品牌的体育用品集团。</div>
-    </div>
-<van-divider
+    <van-divider
   :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
   style="margin-bottom:50px;"
->
+   >
   我也是有底线的_o_
 </van-divider>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -109,6 +129,9 @@ import { Divider } from "vant";
 import { Search } from "vant";
 import { Image as VanImage } from "vant";
 import { Grid, GridItem } from "vant";
+import searchList from "../components/Search"
+import throttle from "../utils/throttle";
+import request from "../utils/request";
 
 Vue.use(Grid);
 Vue.use(GridItem);
@@ -120,7 +143,7 @@ Vue.use(Row);
 import topbar from "../components/TopBar.vue";
 export default {
   name: "Discover",
-  components: { topbar },
+  components: { topbar, searchList},
   methods: {
     changeMan(){
      this.$store.commit('changetitleArr',{arr:['男士热卖','男生热推','可爱男生']})
@@ -137,9 +160,6 @@ export default {
     this.$store.commit('changeShow',{tag:['童衣','童鞋','童裤']})
     this.$store.dispatch('changeAdv',{img:'/img/kids.jpg'})
     },    
-    onSearch(a, b, c) {
-      console.log(1);
-    },
     goto(path){
      this.$router.push(path)
     },
@@ -153,11 +173,46 @@ export default {
     },
     onCancel() {
       this.classify = true;
+      this.$store.dispatch('trgChangeShowBool',{bool:true})
+      this.$store.dispatch('trgChangeSearchBool',{bool:false})
+      this.$store.commit('displayTabbar',true);
     },
     fadeClassify(e) {
       this.classify = false;
-      console.log(this.classify);
+      this.$store.dispatch('trgChangeShowBool',{bool:false})
+      this.$store.dispatch('trgChangeSearchBool',{bool:true})
+      this.$store.commit('displayTabbar',false);
     },
+    salesSort(){
+     this.$store.dispatch('partChage',{tag:'sales',n:true});
+    },
+    priceSort(){
+     this.$store.dispatch('partChage',{tag:'salePrice'});
+    },
+    praiseSort(){
+     this.$store.dispatch('partChage',{tag:'praise',n:true});
+    },
+    content(value){
+      if(typeof value !== 'string') return false;
+      let val = value.trim();
+      let store = this.$store;
+    async  function getSearchListData(payload){
+        let data =await request.get('/goods',{
+          params:{
+            size:''
+          }
+        });
+        let ephemeralData = data.data.data.data;
+        let searchResult =  ephemeralData.map(item=>{
+          if(item.title.indexOf(val) !== -1 || item.tag.indexOf(val) !== -1){
+            return item;
+          }
+        })
+        let result   = searchResult.filter(item=> item!== undefined);
+        payload.dispatch('trgChangeArr',{data:result});
+      }
+      throttle(getSearchListData(store), 500)
+    }
   },
   data() {
     return {
@@ -168,21 +223,38 @@ export default {
   created() {
     this.$store.dispatch("trgInit");
   },
+ beforeDestroy(){
+      this.$store.dispatch('trgChangeShowBool',{bool:true})
+      this.$store.dispatch('trgChangeSearchBool',{bool:false})
+      this.$store.commit('displayTabbar',true);
+  },
   computed: {
     discoverlist() {
-      return this.$store.state.dischild.discoverlist;
+      return (
+        this.$store.getters.getpartOneData
+      )
     },
     titleArr(){return this.$store.state.dischild.distitleArr},
     discoverareaOne() {
-      return this.$store.state.dischild.discoverareaOne;
+      return (
+        this.$store.getters.getpartTwoData
+      )
     },
     discoverareaTwo() {
-      return this.$store.state.dischild.discoverareaTwo;
+      return(
+        this.$store.getters.getpartOneData
+      )
     },
     getAdv(){
       return (
         this.$store.getters.topAdv
       );
+    },
+    getShowBool(){
+      return this.$store.getters.getSearchBool
+    },
+    mianShow(){
+    return  this.$store.getters.getShowBool;
     }
   },
 };
@@ -254,4 +326,17 @@ export default {
     }
   }
 }
+  .btn_group{
+    padding: 10px;
+    text-align: right;
+  }
+  .goodInfo{
+    height: 20px;
+    span{
+      font-size: 8px;
+      padding: 2px;
+      transform: scale(0.5);
+      margin-bottom: -20px;
+    }
+  }
 </style>

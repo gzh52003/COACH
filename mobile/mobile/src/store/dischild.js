@@ -17,6 +17,15 @@ const dischild = {
     getters:{
       topAdv(state){
           return state.topAdv;
+      },
+      getpartOneData(state){
+         return state.discoverlist
+      },
+      getpartTwoData(state){
+        return state.discoverareaOne
+      },
+      getpartThreeData(state){
+        return state.discoverareaTwo
       }
     },
     mutations:{
@@ -107,11 +116,53 @@ const dischild = {
           state.discoverlist = recommed;
           state.discoverareaOne = time;
           state.discoverareaTwo = price;
+          state.topAdv = '/img/nt.jpg';
       },
       async cutAdv(state,payload){
       const {img} = payload;
       console.log('img',img)
       state.topAdv = img;
+      },
+      changeSort(state,payload){
+        let {tag,n} = payload;
+        function p1(){
+          if(n){
+            state.discoverlist.sort(function(a,b){
+              return b[tag]*1 - a[tag]*1
+            })
+          }else{
+            state.discoverlist.sort(function(a,b){
+              return a[tag]*1 - b[tag]*1
+            })
+          }
+        }
+        function p2(){
+          if(n){
+            state.discoverareaOne.sort(function(a,b){
+              return b[tag]*1 - a[tag]*1
+            })
+          }else{
+          state.discoverareaOne.sort(function(a,b){
+            return a[tag]*1 - b[tag]*1
+          })
+         }
+        }
+        function p3(){
+          if(n){
+            state.discoverareaOne.sort(function(a,b){
+              return b[tag]*1 - a[tag]*1
+            })
+          }else{
+          state.discoverareaOne.sort(function(a,b){
+              return a[tag]*1 - b[tag]*1
+          })   
+          } 
+        }
+        p1();
+        p2();
+        p3();
+
+        
       }
     },
     actions:{
@@ -121,10 +172,15 @@ const dischild = {
       },
       trgInit(context){
         context.commit('inits')
+        context.commit('changetitleArr',{arr:['潮流新品','精品优惠','崭新上架']})
       },
       changeAdv(context,payload){
          context.commit('cutAdv',payload)
          console.log(payload)
+      },
+      partChage(context,payload){
+        context.commit('changeSort',payload)
+        
       }
     }
 }
